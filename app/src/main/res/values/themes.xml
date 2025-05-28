@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ServyApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/Secoundary_Green</item>
+        <item name="android:statusBarColor">@color/Secoundary_Green</item> <!-- This sets the status bar color -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.ServyApp" parent="Base.Theme.ServyApp" >
+        <item name="colorPrimary">@color/Secoundary_Green</item>
+        <item name="android:statusBarColor">@color/Secoundary_Green</item> <!-- This sets the status bar color -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

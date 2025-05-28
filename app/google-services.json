@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "750706759075",
+    "project_id": "aayurveda-app",
+    "storage_bucket": "aayurveda-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750706759075:android:d7286f01fa7307ba4af616",
+        "android_client_info": {
+          "package_name": "com.example.servyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-mDHUTcCdtzomYYBZGelVcuMRTcPPUDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
