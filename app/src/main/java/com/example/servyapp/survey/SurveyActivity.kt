@@ -2,7 +2,6 @@ package com.example.servyapp.survey
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -23,7 +22,6 @@ import com.example.servyapp.R
 import com.example.servyapp.databinding.ActivitySurveyBinding
 import com.example.servyapp.profile.ProfileActivity
 import com.example.servyapp.registration.LoginActivity
-import com.example.servyapp.registration.RegistrationActivity
 import com.example.servyapp.survey.CalculationActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.radiobutton.MaterialRadioButton
@@ -36,79 +34,77 @@ data class Question(
 class SurveyActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySurveyBinding
     private var currentSet = 1
-    private val totalSets = 15
+    private val totalSets = 13
     private var totalPoints = 0
     private val pointsMap = mapOf("a" to 30, "b" to 20, "c" to 10)
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
-    private val userAnswers = MutableList(totalSets) { MutableList(3) { "" } } // Stores selected option tags (a, b, c) for each question
+    private val userAnswers = MutableList(totalSets) { MutableList(5) { "" } } // Max 5 questions per set (Set 12)
 
-    // 15 sets of 3 health-related questions with unique options
+    // 13 sets of health-related questions with unique options
     private val questionSets = listOf(
         listOf(
             Question("Q1: Wake up time?", listOf("a) 4 to 6 AM", "b) 6 to 8 AM", "c) 8 to 10 AM")),
-            Question("Q2: How do you feel after waking up?", listOf("a) Competely Fresh", "b) Partially Fresh", "c) Dull")),
-            Question("Q3: First thing you do after wake up?", listOf("a) Chating a Shloke/Mantra", "b) Go to the Morning chores", "c) Go through/check social media"))
+            Question("Q2: How do you feel after waking up?", listOf("a) Completely Fresh", "b) Partially Fresh", "c) Dull")),
+            Question("Q3: What is the first thing you do after waking up?", listOf("a) Offer Prayer/Chanting a Mantra", "b) Go to the morning chores", "c) Go through the mobile"))
         ),
         listOf(
-            Question("Q1: Do you need any external source/substance like tabbaco,tea etc ?", listOf("a) No", "b) Sometimes", "c) Always")),
-            Question("Q2: Style of washroom, you use ?", listOf("a) Indian", "b) Sometimes Indian & Western", "c) Western")),
-            Question("Q3: Do you apply pressure during defecation process ?", listOf("a) No", "b) Sometimes", "c) Always"))
+            Question("Q1: Type of washroom do you use during defecation?", listOf("a) Indian", "b) Sometimes Indian & Western", "c) Western")),
+            Question("Q2: Do you need any external source/substance like tobacco, tea etc. before Malavisarjan?", listOf("a) No", "b) Sometimes", "c) Always")),
+            Question("Q3: Do you apply pressure during defecation process?", listOf("a) No", "b) Sometimes", "c) Always"))
         ),
         listOf(
-            Question("Q1: Kind of Source, you use for dantdhawan ?", listOf("a) Pwigs of plants like Neem", "b) Toothpaste with Natural integradient", "c) Toothpaste with floride content")),
-            Question("Q2: How many times, do you clean your brush?", listOf("a) once a day", "b) Sometime once a day", "c) Never Brush")),
-            Question("Q3: Do you Brush your teeth of daily basis?", listOf("a) Yes", "b) Sometimes", "c) No"))
+            Question("Q1: What kind of material do you use for dantadhavan?", listOf("a) Twigs of plants like Neem", "b) Toothpaste with natural ingredients", "c) Toothpaste with fluoride content")),
+            Question("Q2: How many times do you clean your teeth?", listOf("a) Once a day", "b) Sometimes once a day", "c) Never brush"))
         ),
         listOf(
-            Question("Q1: What is your Screen Time?", listOf("a) 1 to 3 Hours", "b) 3 to 5 Hours", "c) More than 5 Hohurs")),
-            Question("Q2: Do you wear eyeglasses or contact lenses?", listOf("a) No", "b) Sometimes", "c) Yes")),
-            Question("Q3: To protect your eyes do you perform Anjana Karma?", listOf("a) Yes Daily", "b) Sometimes on Occusion", "c) None"))
+            Question("Q1: To protect your eyes, do you apply Anjana?", listOf("a) Yes, daily", "b) Sometimes", "c) Never")),
+            Question("Q2: Do you wear eyeglasses or contact lenses?", listOf("a) No", "b) Sometimes", "c) Yes, daily")),
+            Question("Q3: What is your daily screen time?", listOf("a) Less than 2 hours", "b) 2 to 6 hours", "c) More than 6 hours"))
         ),
         listOf(
-            Question("Q1: Do you medicated drop in nose?", listOf("a) Yes", "b) Sometimes", "c) No")),
-            Question("Q2: Do you often suffer from a blocked or runny nose??", listOf("a) Rarely", "b) Sometimes", "c) Often")),
-            Question("Q3: Do you perform Jal Neti dialy?", listOf("a) Always", "b) Sometimes", "c) Rarely"))
+            Question("Q1: Do you instill medicated drops in the nose?", listOf("a) Yes", "b) Sometimes", "c) No")),
+            Question("Q2: Are you doing Jal Neti every day?", listOf("a) Yes", "b) Occasionally", "c) No"))
         ),
         listOf(
-            Question("Q1: Do you gargles daily?", listOf("a) Yes", "b) Sometimes", "c) None")),
-            Question("Q2: Type of source do you use per gargles?", listOf("a) Medicated bil/water", "b) Water", "c) Bitadine")),
-            Question("Q3: Do you gargle regularly to maintain oral hygiene?", listOf("a) Daily", "b) Weekly", "c) Rarely"))
+            Question("Q1: Do you gargle daily?", listOf("a) Yes", "b) Occasionally", "c) No")),
+            Question("Q2: What type of substance do you use?", listOf("a) Cold/normal water", "b) Lukewarm water", "c) Medicated oil/kwath"))
         ),
         listOf(
-            Question("Q1: Do you perform/do oil message daily?", listOf("a) Yes", "b) Sometimes", "c) No")),
-            Question("Q2: Nature of oil use?", listOf("a) Medical oil", "b) Simple Coconut oil", "c) None")),
-            Question("Q3: Do you perform oil massage on your body daily?", listOf("a) Yes", "b) Sometimes", "c) Daily"))
+            Question("Q1: Do you perform oil massage daily?", listOf("a) Yes", "b) Occasionally", "c) No")),
+            Question("Q2: What is the nature of the oil used?", listOf("a) Tila Taila", "b) Narikel Taila", "c) Other oil"))
         ),
         listOf(
-            Question("Q1: Do you exercise?", listOf("a) Daily", "b) Occasionally", "c) Never")),
-            Question("Q2: Mode of exercise?", listOf("a) Yoga", "b) Gym", "c) Walking")),
-            Question("Q3: Durition of Exercise?", listOf("a) 45 Minutes", "b) 30 Minutes", "c) 15 Minutes"))
+            Question("Q1: Do you exercise?", listOf("a) Yes, daily", "b) Occasionally", "c) Never")),
+            Question("Q2: What is your mode of exercise?", listOf("a) Yoga", "b) Gym", "c) Walking")),
+            Question("Q3: When do you exercise?", listOf("a) Morning", "b) Afternoon", "c) Evening")),
+            Question("Q4: What is the duration of your exercise?", listOf("a) 45 minutes", "b) 30 minutes", "c) 15 minutes"))
         ),
         listOf(
-            Question("Q1: Do you do Udavartan?", listOf("a) Daily", "b) Sometimes", "c) Not at all")),
-            Question("Q2: Have you experienced benefits like improved skin texture or fat reduction from Udvartana?", listOf("a) Yes", "b) Little bit", "c) No")),
-            Question("Q3: Do you use Ayurvedic powders or oils during Udvartana massage?", listOf("a) Often", "b) Sometimes", "c) Rarely"))
+            Question("Q1: Are you doing Udvartana?", listOf("a) Yes, daily", "b) Occasionally", "c) No")),
+            Question("Q2: Have you experienced benefits like improved skin texture or fat reduction?", listOf("a) Yes", "b) Little bit", "c) No"))
         ),
         listOf(
-            Question("Q1: Do you bath?", listOf("a) Yes, Daily once", "b) Sometimes twice in a day", "c) Once in teo days")),
-            Question("Q2: Type of water, you prefer above neck region?", listOf("a) Warm", "b) Cold", "c) Hot")),
-            Question("Q3: Type of water, you prefer below neck region?", listOf("a) Warm", "b) Cold", "c) Hot"))
+            Question("Q1: Do you bath?", listOf("a) Yes, daily without fail", "b) Most days, but I skip occasionally", "c) No, I don't bathe daily")),
+            Question("Q2: What type of water do you usually use above the neck region for bathing?", listOf("a) Normal", "b) Lukewarm", "c) Hot")),
+            Question("Q3: What type of water do you usually use below the neck region for bathing?", listOf("a) Warm", "b) Lukewarm", "c) Normal"))
         ),
         listOf(
-            Question("Q1: Do you perform meditation?", listOf("a) Daily", "b) Occasionally", "c) Never")),
-            Question("Q2: Duration of Medication?", listOf("a) 30 Minutes", "b) 10-20 Minutes", "c) 0-10 Minutes")),
-            Question("Q3: Has meditation helped you reduce stress or improve focus?", listOf("a) Yes", "b) Little bit", "c) No"))
+            Question("Q1: Do you meditate?", listOf("a) Yes, daily", "b) Occasionally", "c) Never")),
+            Question("Q2: What is the duration of your meditation?", listOf("a) More than 45 minutes", "b) 15 to 45 minutes", "c) Less than 15 minutes")),
+            Question("Q3: At what time do you usually meditate?", listOf("a) Early morning", "b) In the evening", "c) Before sleep"))
         ),
         listOf(
-            Question("Q1: Do you take ahar according to Prakrati, rutu (Season)?", listOf("a) Always", "b) Sometimes", "c) Not at all")),
-            Question("Q2: What kind of food do you preferred?", listOf("a) Normal Spicy", "b) Intermediate Spicy", "c) Spicy")),
-            Question("Q3: Do you take food(ahar) as per hunger?", listOf("a) Yes, as i get hungry I eat", "b) Sometimes", "c) No, as per my daily schedule"))
+            Question("Q1: Do you eat breakfast?", listOf("a) Yes, daily", "b) Occasionally, when I get hungry", "c) Not at all")),
+            Question("Q2: What type of food do you eat for breakfast?", listOf("a) Fruits", "b) Fermented food", "c) Poha/Upma/Egg, etc.")),
+            Question("Q3: Do you eat when you feel hungry?", listOf("a) Yes, I always do", "b) Sometimes", "c) No, I eat even if I'm not hungry")),
+            Question("Q4: What type of food do you eat for lunch?", listOf("a) Vegetarian", "b) Mixed", "c) Non-vegetarian")),
+            Question("Q5: How much food do you usually eat in one meal?", listOf("a) Less than required", "b) Just enough (I feel satisfied, not too full)", "c) More than required"))
         ),
         listOf(
-            Question("Q1: What kind of food you preferred at night?", listOf("a) Light", "b) Intermediate", "c) heavy")),
-            Question("Q2: What time do you eat your dinners?", listOf("a) 6-8 PM", "b) 8-10 PM", "c) After 10 PM")),
-            Question("Q3: At what time, do you eat your dinners?", listOf("a) Before 10PM", "b) 10PM - 12AM", "c) After 12AM"))
+            Question("Q1: What time do you have dinner?", listOf("a) Before sunset", "b) 8 to 9 PM", "c) After 9 PM")),
+            Question("Q2: What type of food do you eat for dinner?", listOf("a) Light", "b) Sometimes light, sometimes heavy", "c) Heavy")),
+            Question("Q3: What is your sleeping time?", listOf("a) Before 10 PM", "b) 10 PM - 12 AM", "c) After 12 AM"))
         )
     )
 
@@ -119,7 +115,7 @@ class SurveyActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.Secoundary_Green)
-        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false // if green is dark
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -133,10 +129,10 @@ class SurveyActivity : AppCompatActivity() {
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
         // Restore state if available
         savedInstanceState?.let {
             currentSet = it.getInt("currentSet", 1)
-
             totalPoints = it.getInt("totalPoints", 0)
             val savedAnswers = it.getSerializable("userAnswers") as? Array<Array<String>>
             savedAnswers?.forEachIndexed { setIndex, answers ->
@@ -149,17 +145,16 @@ class SurveyActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_profile -> {
-                    var i=Intent(this, ProfileActivity::class.java)
-                    startActivity(i)
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
                 }
-
-                R.id.nav_home->{
-
+                R.id.nav_home -> {
+                    // Handle home navigation if needed
                 }
                 R.id.nav_logout -> {
                     logout()
                 }
-                R.id.nav_dev->{
+                R.id.nav_dev -> {
                     openWebsite()
                 }
             }
@@ -175,6 +170,14 @@ class SurveyActivity : AppCompatActivity() {
             if (saveAndCalculateSetPoints()) {
                 if (currentSet < totalSets) {
                     currentSet++
+                    // Clear answers for subsequent questions in sets with conditional display
+                    if (setOf(6, 7, 8, 9, 11, 12).contains(currentSet)) {
+                        val q1Answer = userAnswers[currentSet - 1][0]
+                        val maxQuestions = getMaxQuestionsForSet(currentSet, q1Answer)
+                        for (i in maxQuestions until userAnswers[currentSet - 1].size) {
+                            userAnswers[currentSet - 1][i] = ""
+                        }
+                    }
                     displaySet(currentSet)
                 } else {
                     // Recalculate total points for all sets before navigating
@@ -192,6 +195,14 @@ class SurveyActivity : AppCompatActivity() {
         binding.previousButton.setOnClickListener {
             if (saveAndCalculateSetPoints() && currentSet > 1) {
                 currentSet--
+                // Clear answers for subsequent questions in sets with conditional display
+                if (setOf(6, 7, 8, 9, 11, 12).contains(currentSet)) {
+                    val q1Answer = userAnswers[currentSet - 1][0]
+                    val maxQuestions = getMaxQuestionsForSet(currentSet, q1Answer)
+                    for (i in maxQuestions until userAnswers[currentSet - 1].size) {
+                        userAnswers[currentSet - 1][i] = ""
+                    }
+                }
                 displaySet(currentSet)
             }
         }
@@ -206,7 +217,6 @@ class SurveyActivity : AppCompatActivity() {
     private fun openWebsite() {
         val companyUrl = "https://nextserve.in/"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(companyUrl))
-
         try {
             startActivity(Intent.createChooser(intent, "Open with"))
         } catch (e: Exception) {
@@ -214,20 +224,15 @@ class SurveyActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun logout() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
-            clear() // or remove("isLoggedIn") + remove("isRegistered")
+            clear()
             apply()
         }
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
-
     }
-
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -236,36 +241,33 @@ class SurveyActivity : AppCompatActivity() {
         outState.putSerializable("userAnswers", userAnswers.toTypedArray())
     }
 
+    private fun getMaxQuestionsForSet(setNumber: Int, q1Answer: String): Int {
+        return when (setNumber) {
+            6, 7, 9 -> if (q1Answer in listOf("a", "b")) 2 else 1
+            8 -> if (q1Answer in listOf("a", "b")) 4 else 1
+            11 -> if (q1Answer in listOf("a", "b")) 3 else 1
+            12 -> if (q1Answer in listOf("a", "b")) 5 else 3 // Q3, Q4, Q5 always shown
+            else -> questionSets[setNumber - 1].size
+        }
+    }
+
     private fun displaySet(setNumber: Int) {
         with(binding) {
             // Update set title
-            //setTitle.text = "Set $setNumber"
-            if(setNumber==1){
-                setTitle.text="Bramha Muhurta"
-            }else if(setNumber==2){
-                setTitle.text="Defecation/Mala Visarjan"
-            }else if(setNumber==3){
-                setTitle.text="Dhantdhawan"
-            }else if(setNumber==4){
-                setTitle.text="Anjana Karma"
-            }else if(setNumber==5){
-                setTitle.text="Nasya"
-            }else if(setNumber==6){
-                setTitle.text="Gandusha"
-            }else if(setNumber==7){
-                setTitle.text="Abhyanga"
-            }else if(setNumber==8){
-                setTitle.text="Exercise"
-            }else if(setNumber==9){
-                setTitle.text="Udavartana"
-            }else if(setNumber==10){
-                setTitle.text="Bath(Snana)"
-            }else if(setNumber==11){
-                setTitle.text="Meditation(Dhanya)"
-            }else if(setNumber==12){
-                setTitle.text="Aahar"
-            }else{
-                setTitle.text="Ratri Charya"
+            setTitle.text = when (setNumber) {
+                1 -> "Brahma Muhurta"
+                2 -> "Defecation/Mala Visarjan"
+                3 -> "Dantdhawan (Tooth Cleaning)"
+                4 -> "Anjana Karma"
+                5 -> "Nasya"
+                6 -> "Gandusha"
+                7 -> "Abhyanga"
+                8 -> "Exercise"
+                9 -> "Udvartana"
+                10 -> "Bath (Snana)"
+                11 -> "Meditation (Dhyana)"
+                12 -> "Aahar"
+                else -> "Ratri Charya"
             }
 
             // Show/hide Previous button
@@ -274,8 +276,18 @@ class SurveyActivity : AppCompatActivity() {
             // Clear previous questions
             questionContainer.removeAllViews()
 
-            // Display 3 questions
-            questionSets[setNumber - 1].forEachIndexed { index, question ->
+            // Determine number of questions to display based on Q1 answer
+            val q1Answer = userAnswers[setNumber - 1][0]
+            val questionsToDisplay = when (setNumber) {
+                6, 7, 9 -> if (q1Answer in listOf("a", "b")) questionSets[setNumber - 1] else listOf(questionSets[setNumber - 1][0])
+                8 -> if (q1Answer in listOf("a", "b")) questionSets[setNumber - 1] else listOf(questionSets[setNumber - 1][0])
+                11 -> if (q1Answer in listOf("a", "b")) questionSets[setNumber - 1] else listOf(questionSets[setNumber - 1][0])
+                12 -> if (q1Answer in listOf("a", "b")) questionSets[setNumber - 1] else questionSets[setNumber - 1].subList(0, 1) + questionSets[setNumber - 1].subList(2, 5)
+                else -> questionSets[setNumber - 1]
+            }
+
+            // Display questions
+            questionsToDisplay.forEachIndexed { index, question ->
                 // Question Text
                 val questionText = com.google.android.material.textview.MaterialTextView(this@SurveyActivity).apply {
                     text = question.text
@@ -311,11 +323,19 @@ class SurveyActivity : AppCompatActivity() {
                     radioGroup.addView(radioButton)
                 }
 
-                // Update answers when selection changes
+                // Update answers and handle Q1 selection changes
                 radioGroup.setOnCheckedChangeListener { _, checkedId ->
                     if (checkedId != -1) {
                         val selectedButton = findViewById<RadioButton>(checkedId)
                         userAnswers[setNumber - 1][index] = selectedButton.tag.toString()
+                        // If this is Q1 and the set has conditional questions, redraw the set
+                        if (index == 0 && setNumber in listOf(6, 7, 8, 9, 11, 12)) {
+                            // Clear answers for subsequent questions
+                            for (i in 1 until userAnswers[setNumber - 1].size) {
+                                userAnswers[setNumber - 1][i] = ""
+                            }
+                            displaySet(setNumber)
+                        }
                     }
                 }
 
@@ -330,22 +350,28 @@ class SurveyActivity : AppCompatActivity() {
     private fun saveAndCalculateSetPoints(): Boolean {
         with(binding) {
             var allAnswered = true
-            // Iterate through question container to find RadioGroups
-            for (i in 0 until questionContainer.childCount) {
-                val view = questionContainer.getChildAt(i)
+            val q1Answer = userAnswers[currentSet - 1][0]
+            val questionsToCheck = getMaxQuestionsForSet(currentSet, q1Answer)
+
+            // Iterate through displayed questions
+            for (i in 0 until questionContainer.childCount step 2) { // Step 2 to skip question texts
+                val view = questionContainer.getChildAt(i + 1)
                 if (view is RadioGroup) {
-                    val checkedId = view.checkedRadioButtonId
-                    if (checkedId == -1) {
-                        allAnswered = false
-                        break
+                    val questionIndex = i / 2
+                    if (questionIndex < questionsToCheck) {
+                        val checkedId = view.checkedRadioButtonId
+                        if (checkedId == -1) {
+                            allAnswered = false
+                            break
+                        }
+                        val selectedButton = findViewById<RadioButton>(checkedId)
+                        userAnswers[currentSet - 1][questionIndex] = selectedButton.tag.toString()
                     }
-                    val selectedButton = findViewById<RadioButton>(checkedId)
-                    userAnswers[currentSet - 1][i / 2] = selectedButton.tag.toString()
                 }
             }
 
             if (!allAnswered) {
-                Toast.makeText(this@SurveyActivity, "Please answer all questions", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SurveyActivity, "Please answer all displayed questions", Toast.LENGTH_SHORT).show()
                 return false
             }
             return true
@@ -353,8 +379,12 @@ class SurveyActivity : AppCompatActivity() {
     }
 
     private fun recalculateTotalPoints() {
-        totalPoints = userAnswers.flatten().sumOf { answer ->
-            pointsMap[answer] ?: 0
-        }
+        totalPoints = userAnswers.mapIndexed { setIndex, answers ->
+            val q1Answer = answers[0]
+            val maxQuestions = getMaxQuestionsForSet(setIndex + 1, q1Answer)
+            answers.take(maxQuestions).sumOf { answer ->
+                pointsMap[answer] ?: 0
+            }
+        }.sum()
     }
 }

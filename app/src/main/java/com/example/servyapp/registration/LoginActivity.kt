@@ -61,8 +61,12 @@ class LoginActivity : AppCompatActivity() {
     private fun checkMobileNumber(mobile: String, sharedPreferences: android.content.SharedPreferences) {
         databaseReference.child(mobile).get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
-                // Save login status in SharedPreferences
-                sharedPreferences.edit().putBoolean(KEY_IS_LOGGED_IN, true).apply()
+                // Save login status and mobile number in SharedPreferences
+                sharedPreferences.edit()
+                    .putBoolean(KEY_IS_LOGGED_IN, true)
+                    .putString(KEY_MOBILE, mobile)
+                    .apply()
+
 
                 // Go to ServyActivity
                 val intent = Intent(this, SurveyActivity::class.java)
