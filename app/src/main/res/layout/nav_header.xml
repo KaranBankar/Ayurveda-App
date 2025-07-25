@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="200dp"
     android:background="@color/Primary_Green"
     android:orientation="vertical"
     android:padding="16dp"
@@ -12,16 +12,32 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
-        android:src="@drawable/headeruser" />
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Karan Bankar"
+        android:text="AyurStyle"
         android:layout_gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:layout_marginTop="8dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ROOTED IN TRADITION"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STYLE FOR TODAY"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"/>
 
 </LinearLayout>

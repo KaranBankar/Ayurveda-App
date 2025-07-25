@@ -24,7 +24,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#000000" />
+        android:textColor="#0B890F" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ROOTED IN TRADITION."
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:textColor="#4CAF50" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STYLE FOR TODAY."
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:textColor="#4CAF50" />
 </LinearLayout>

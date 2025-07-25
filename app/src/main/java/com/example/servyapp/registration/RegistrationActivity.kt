@@ -152,6 +152,12 @@ class RegistrationActivity : AppCompatActivity() {
                 state = stateSpinner.selectedItem.toString()
             )
 
+            // Store user's name in SharedPreferences
+            val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("user_name", user.name)
+            editor.apply()
+
             database.child(user.mobile).setValue(user)
                 .addOnSuccessListener {
                     Toast.makeText(this@RegistrationActivity, "Registration successful", Toast.LENGTH_SHORT).show()

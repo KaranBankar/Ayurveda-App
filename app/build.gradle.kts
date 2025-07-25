@@ -61,4 +61,7 @@ dependencies {
 
     //KButton Dependecies
     implementation ("com.github.KaranBankar:KButton:v1.0.0")
+
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
 }

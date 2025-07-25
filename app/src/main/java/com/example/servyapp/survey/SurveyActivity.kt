@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.servyapp.R
 import com.example.servyapp.databinding.ActivitySurveyBinding
+import com.example.servyapp.profile.AboutUsActivity
 import com.example.servyapp.profile.ProfileActivity
 import com.example.servyapp.registration.LoginActivity
 import com.example.servyapp.survey.CalculationActivity
@@ -44,67 +45,67 @@ class SurveyActivity : AppCompatActivity() {
     // 13 sets of health-related questions with unique options
     private val questionSets = listOf(
         listOf(
-            Question("Q1: Wake up time?", listOf("a) 4 to 6 AM", "b) 6 to 8 AM", "c) 8 to 10 AM")),
-            Question("Q2: How do you feel after waking up?", listOf("a) Completely Fresh", "b) Partially Fresh", "c) Dull")),
-            Question("Q3: What is the first thing you do after waking up?", listOf("a) Offer Prayer/Chanting a Mantra", "b) Go to the morning chores", "c) Go through the mobile"))
+            Question("Q1: What time do you Wake Up?", listOf("a) Between 4 to 6 AM", "b) Between 6 to 8 AM", "c) Between 8 to 10 AM")),
+            Question("Q2: How do you feel after waking up?", listOf("a) Completely Fresh", "b) Somewhat Fresh", "c) Dull or Tired")),
+            Question("Q3: What is the first thing you do after waking up?", listOf("a) Offer Prayer/Chanting a Mantra", "b) Start Morning Chores", "c) Check Your Phone"))
         ),
         listOf(
-            Question("Q1: Type of washroom do you use during defecation?", listOf("a) Indian", "b) Sometimes Indian & Western", "c) Western")),
-            Question("Q2: Do you need any external source/substance like tobacco, tea etc. before Malavisarjan?", listOf("a) No", "b) Sometimes", "c) Always")),
-            Question("Q3: Do you apply pressure during defecation process?", listOf("a) No", "b) Sometimes", "c) Always"))
+            Question("Q1: What Type of washroom do you use during defecation?", listOf("a) Indian", "b) Sometimes Indian & Western", "c) Western")),
+            Question("Q2: Do you required any external stimulants like tobacco, tea etc. before ?defecation", listOf("a) No", "b) Sometimes", "c) Always")),
+            Question("Q3: Do you apply pressure during defecation ?", listOf("a) No", "b) Sometimes", "c) Always"))
         ),
         listOf(
-            Question("Q1: What kind of material do you use for dantadhavan?", listOf("a) Twigs of plants like Neem", "b) Toothpaste with natural ingredients", "c) Toothpaste with fluoride content")),
-            Question("Q2: How many times do you clean your teeth?", listOf("a) Once a day", "b) Sometimes once a day", "c) Never brush"))
+            Question("Q1: Which type of material do you use for Tooth Cleaning(dantadhavan)?", listOf("a) Datun (Herbal Stick like Neem,babool etc)", "b) Toothpaste made with natural ingredients", "c) Toothpaste containing fluoride")),
+            Question("Q2: How often do you brush your teeth?", listOf("a) Twice a day", "b) once a day", "c) Never brush"))
         ),
         listOf(
-            Question("Q1: To protect your eyes, do you apply Anjana?", listOf("a) Yes, daily", "b) Sometimes", "c) Never")),
-            Question("Q2: Do you wear eyeglasses or contact lenses?", listOf("a) No", "b) Sometimes", "c) Yes, daily")),
+            Question("Q1: Do you apply Anjana, To protect your eyes?", listOf("a) Yes, daily", "b) Sometimes", "c) Never")),
+            Question("Q2: Do you wear spectacle or contact lenses?", listOf("a) No", "b) Sometimes", "c) Yes, daily")),
             Question("Q3: What is your daily screen time?", listOf("a) Less than 2 hours", "b) 2 to 6 hours", "c) More than 6 hours"))
         ),
         listOf(
-            Question("Q1: Do you instill medicated drops in the nose?", listOf("a) Yes", "b) Sometimes", "c) No")),
-            Question("Q2: Are you doing Jal Neti every day?", listOf("a) Yes", "b) Occasionally", "c) No"))
+            Question("Q1: Do you use medicated nasal drops(nasya)?", listOf("a) Yes", "b) Sometimes", "c) No")),
+            Question("Q2: Do you practice Jal Neti daily?", listOf("a) Yes", "b) Occasionally", "c) No"))
         ),
         listOf(
-            Question("Q1: Do you gargle daily?", listOf("a) Yes", "b) Occasionally", "c) No")),
-            Question("Q2: What type of substance do you use?", listOf("a) Cold/normal water", "b) Lukewarm water", "c) Medicated oil/kwath"))
+            Question("Q1: Do you gargle everyday?", listOf("a) Yes", "b) Occasionally", "c) No")),
+            Question("Q2: What type of liquid do you use?", listOf("a) Cold/room temperature water", "b) Lukewarm water", "c) Medicated oil/kwath"))
         ),
         listOf(
             Question("Q1: Do you perform oil massage daily?", listOf("a) Yes", "b) Occasionally", "c) No")),
-            Question("Q2: What is the nature of the oil used?", listOf("a) Tila Taila", "b) Narikel Taila", "c) Other oil"))
+            Question("Q2: Which type of oil do you use?", listOf("a) Tila Taila", "b) Narikel Taila", "c) Other oil"))
         ),
         listOf(
             Question("Q1: Do you exercise?", listOf("a) Yes, daily", "b) Occasionally", "c) Never")),
-            Question("Q2: What is your mode of exercise?", listOf("a) Yoga", "b) Gym", "c) Walking")),
-            Question("Q3: When do you exercise?", listOf("a) Morning", "b) Afternoon", "c) Evening")),
-            Question("Q4: What is the duration of your exercise?", listOf("a) 45 minutes", "b) 30 minutes", "c) 15 minutes"))
+            Question("Q2: What type of exercise do you practice?", listOf("a) Yoga", "b) Gym", "c) Walking")),
+            Question("Q3: When do you usually exercise?", listOf("a) Morning", "b) Afternoon", "c) Evening")),
+            Question("Q4: What is the duration of your exercise?", listOf("a) More than 45 minutes", "b) 15 to 45 minutes", "c) less than 15 minutes"))
         ),
         listOf(
-            Question("Q1: Are you doing Udvartana?", listOf("a) Yes, daily", "b) Occasionally", "c) No")),
-            Question("Q2: Have you experienced benefits like improved skin texture or fat reduction?", listOf("a) Yes", "b) Little bit", "c) No"))
+            Question("Q1: Do you perform Udvartana?", listOf("a) Yes, daily", "b) Occasionally", "c) No")),
+            Question("Q2: Do you experience benefits like improved skin texture or fat reduction?", listOf("a) Yes", "b) Little bit", "c) No"))
         ),
         listOf(
-            Question("Q1: Do you bath?", listOf("a) Yes, daily without fail", "b) Most days, but I skip occasionally", "c) No, I don't bathe daily")),
-            Question("Q2: What type of water do you usually use above the neck region for bathing?", listOf("a) Normal", "b) Lukewarm", "c) Hot")),
-            Question("Q3: What type of water do you usually use below the neck region for bathing?", listOf("a) Warm", "b) Lukewarm", "c) Normal"))
+            Question("Q1: Do you take a bath?", listOf("a) Yes, daily without fail", "b) Most days, but I skip occasionally", "c) No, I don't bathe daily")),
+            Question("Q2: What type of water do you usually use for bathing above the neck region?", listOf("a) Normal (Room Temperature)", "b) Lukewarm", "c) Hot")),
+            Question("Q3: What type of water do you usually use for bathing below the neck region?", listOf("a) Warm", "b) Lukewarm", "c) Normal (Room Temperature)"))
         ),
         listOf(
             Question("Q1: Do you meditate?", listOf("a) Yes, daily", "b) Occasionally", "c) Never")),
             Question("Q2: What is the duration of your meditation?", listOf("a) More than 45 minutes", "b) 15 to 45 minutes", "c) Less than 15 minutes")),
-            Question("Q3: At what time do you usually meditate?", listOf("a) Early morning", "b) In the evening", "c) Before sleep"))
+            Question("Q3: When do you meditate usually?", listOf("a) Early morning", "b) In the evening", "c) Before sleep"))
         ),
         listOf(
-            Question("Q1: Do you eat breakfast?", listOf("a) Yes, daily", "b) Occasionally, when I get hungry", "c) Not at all")),
-            Question("Q2: What type of food do you eat for breakfast?", listOf("a) Fruits", "b) Fermented food", "c) Poha/Upma/Egg, etc.")),
-            Question("Q3: Do you eat when you feel hungry?", listOf("a) Yes, I always do", "b) Sometimes", "c) No, I eat even if I'm not hungry")),
-            Question("Q4: What type of food do you eat for lunch?", listOf("a) Vegetarian", "b) Mixed", "c) Non-vegetarian")),
-            Question("Q5: How much food do you usually eat in one meal?", listOf("a) Less than required", "b) Just enough (I feel satisfied, not too full)", "c) More than required"))
+            Question("Q1: Do you eat breakfast?", listOf("a) Yes, daily", "b) Occasionally, when I feel hungry", "c) No, Not at all")),
+            Question("Q2: What type of food do you usually have for breakfast?", listOf("a) Fruits", "b) Fermented food", "c) Poha/Upma/Egg, etc.")),
+            Question("Q3: Do you eat only when you feel hungry?", listOf("a) Yes, I always", "b) Sometimes", "c) Even when I'm not hungry")),
+            Question("Q4: What type of food do you usually eat for lunch?", listOf("a) Vegetarian", "b) Mixed", "c) Non-vegetarian")),
+            Question("Q5: How much food do you usually eat in one meal?", listOf("a) Less than needed", "b) Just enough (I feel satisfied, not overly full)", "c) More than needed"))
         ),
         listOf(
-            Question("Q1: What time do you have dinner?", listOf("a) Before sunset", "b) 8 to 9 PM", "c) After 9 PM")),
-            Question("Q2: What type of food do you eat for dinner?", listOf("a) Light", "b) Sometimes light, sometimes heavy", "c) Heavy")),
-            Question("Q3: What is your sleeping time?", listOf("a) Before 10 PM", "b) 10 PM - 12 AM", "c) After 12 AM"))
+            Question("Q1: What time do you usually have dinner?", listOf("a) Before sunset", "b) Between 8 to 9 PM", "c) After 9 PM")),
+            Question("Q2: What type of food do you usually eat for dinner?", listOf("a) Light", "b) Sometimes light, sometimes heavy", "c) Heavy")),
+            Question("Q3: What time do you go to sleep?", listOf("a) Before 10 PM", "b) Between 10 PM - 12 AM", "c) After 12 AM"))
         )
     )
 
@@ -156,6 +157,11 @@ class SurveyActivity : AppCompatActivity() {
                 }
                 R.id.nav_dev -> {
                     openWebsite()
+                }
+                R.id.nav_settings->{
+                    var i=Intent(this, AboutUsActivity::class.java)
+                    startActivity(i)
+                    finish()
                 }
             }
             drawerLayout.closeDrawers()
