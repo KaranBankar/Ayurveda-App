@@ -192,14 +192,12 @@ class CalculationActivity : AppCompatActivity() {
                 textSize = 90f // Adjust text size based on your certificate design. This might need tweaking.
                 textAlign = Paint.Align.CENTER // Center the text horizontally
                 isFakeBoldText = true // Make text bold
+                isAntiAlias = true // For smoother text edges
             }
 
             // Calculate text position
             val xPos = (canvas.width / 2).toFloat() // Center horizontally
             val yPos = (canvas.height * 0.50).toFloat() // Adjusted Y position
-
-            val textBounds = android.graphics.Rect()
-            paint.getTextBounds(userName, 0, userName.length, textBounds)
 
             canvas.drawText(userName, xPos, yPos, paint)
 
@@ -209,32 +207,62 @@ class CalculationActivity : AppCompatActivity() {
     }
 
     private fun saveCertificateToGallery() {
-        // 1. Enable drawing cache and force it to build
-        binding.certificateImageView.isDrawingCacheEnabled = true
-        binding.certificateImageView.buildDrawingCache(true) // Pass true for auto-scaling
-
-        // 2. Get the bitmap from the drawing cache
-        val bitmap = binding.certificateImageView.drawingCache
-
-        if (bitmap == null) {
-            Toast.makeText(this, "Failed to get certificate image. Please try again.", Toast.LENGTH_SHORT).show()
-            // Important: Disable and destroy cache even if bitmap is null
-            binding.certificateImageView.isDrawingCacheEnabled = false
-            binding.certificateImageView.destroyDrawingCache()
-            return // Exit if bitmap is null
-        }
-
-        // 3. Create a copy of the bitmap to avoid issues with the original cache being recycled
-        //    or modified implicitly if you're not careful. This ensures you have a stable bitmap.
-        val finalBitmap = Bitmap.createBitmap(bitmap)
-
-        // 4. Disable and destroy the drawing cache immediately after getting the bitmap
-        binding.certificateImageView.isDrawingCacheEnabled = false
-        binding.certificateImageView.destroyDrawingCache()
-
-        // Retrieve user's name (for file naming)
+        // 1. Retrieve user's name and determine certificate resource
         val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val userName = sharedPreferences.getString("user_name", "User") ?: "User"
+
+        // Recalculate category to get the correct certificate drawable
+        val totalPoints = intent.getIntExtra("TOTAL_POINTS", 0)
+        val category = when {
+            totalPoints >= 1050 -> "Good"
+            totalPoints >= 750 -> "Average"
+            else -> "Very Bad"
+        }
+        val certificateRes = when (category) {
+            "Good" -> R.drawable.one
+            "Average" -> R.drawable.two
+            else -> R.drawable.three
+        }
+
+        val certificateDrawable = ContextCompat.getDrawable(this, certificateRes)
+
+        if (certificateDrawable == null) {
+            Toast.makeText(this, "Certificate image not found. Cannot save.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // --- Create a high-resolution bitmap for saving ---
+        // Use the intrinsic (original) dimensions of the drawable to ensure high resolution
+        val highResBitmap = Bitmap.createBitmap(
+            certificateDrawable.intrinsicWidth,
+            certificateDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(highResBitmap)
+
+        // Draw the original certificate image onto the high-res canvas
+        certificateDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        certificateDrawable.draw(canvas)
+
+        // Draw the user's name onto the high-res canvas
+        val paint = Paint().apply {
+            color = Color.BLACK
+            // Adjust textSize for the high-resolution bitmap.
+            // This should ideally be the same as in displayCertificate for consistency.
+            textSize = 90f // Make sure this textSize is appropriate for your certificate's resolution
+            textAlign = Paint.Align.CENTER
+            isFakeBoldText = true
+            isAntiAlias = true // For smoother text edges
+        }
+
+        val xPos = (canvas.width / 2).toFloat()
+        // Ensure yPos is correctly calculated for the high-res bitmap
+        // Use the same proportional calculation as in displayCertificate
+        val yPos = (canvas.height * 0.50).toFloat() // Match this with displayCertificate's yPos
+
+        canvas.drawText(userName, xPos, yPos, paint)
+        // --- End high-resolution bitmap creation ---
+
 
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val fileName = "Certificate_$userName$timeStamp.png"
@@ -268,7 +296,7 @@ class CalculationActivity : AppCompatActivity() {
                     return
                 }
 
-                finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                highResBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos) // Use highResBitmap here
                 fos.flush()
                 fos.close()
 
@@ -288,7 +316,7 @@ class CalculationActivity : AppCompatActivity() {
                 }
                 val file = File(dir, fileName)
                 fos = FileOutputStream(file)
-                finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                highResBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos) // Use highResBitmap here
                 fos.flush()
                 fos.close()
 
@@ -316,7 +344,7 @@ class CalculationActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             // Recycle the bitmap to free up memory
-            finalBitmap.recycle()
+            highResBitmap.recycle()
         }
     }
 }

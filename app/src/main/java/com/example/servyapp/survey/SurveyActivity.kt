@@ -51,7 +51,7 @@ class SurveyActivity : AppCompatActivity() {
         ),
         listOf(
             Question("Q1: What Type of washroom do you use during defecation?", listOf("a) Indian", "b) Sometimes Indian & Western", "c) Western")),
-            Question("Q2: Do you required any external stimulants like tobacco, tea etc. before ?defecation", listOf("a) No", "b) Sometimes", "c) Always")),
+            Question("Q2: Do you required any external stimulants like tobacco, tea etc. before defecation?", listOf("a) No", "b) Sometimes", "c) Always")),
             Question("Q3: Do you apply pressure during defecation ?", listOf("a) No", "b) Sometimes", "c) Always"))
         ),
         listOf(

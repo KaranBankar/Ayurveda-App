@@ -260,7 +260,7 @@
                             android:id="@+id/developer3_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Dr. Smita A. Aswar"
+                            android:text="Dr. Smita R. Aswar"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:textColor="#212121"/>
